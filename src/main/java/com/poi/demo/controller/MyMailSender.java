@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/demo")
-public class MailSender {
+public class MyMailSender {
 
     @Autowired
     private MailService mailService;

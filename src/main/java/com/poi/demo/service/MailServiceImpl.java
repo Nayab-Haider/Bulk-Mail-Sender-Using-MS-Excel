@@ -1,5 +1,6 @@
 package com.poi.demo.service;
 
+import com.poi.demo.util.MailModel;
 import com.poi.demo.util.MailNotification;
 import javafx.scene.shape.Path;
 import org.apache.poi.ss.usermodel.Cell;
@@ -18,7 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 @Service
 public class MailServiceImpl implements MailService {
@@ -29,7 +33,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public ResponseEntity<?> sendMail(MultipartFile file) {
         XSSFWorkbook workbook=null;
-//        String[] recipientArr = new String[]{};
+        List<String> recipients=new ArrayList<>();
         XSSFRow row=null;
         try {
              workbook = new XSSFWorkbook(file.getInputStream());
@@ -41,14 +45,16 @@ public class MailServiceImpl implements MailService {
             while (iterator.hasNext()){
                 Row currentRow = iterator.next();
                 Cell cell = currentRow.getCell(1);
-//                recipientArr[index++]=cell.toString();
+                recipients.add(cell.toString());
                 System.out.println(cell);
             }
+            String[] recipientArr=new String[recipients.size()];
+            MailModel mailModel=new MailModel(recipients.toArray(recipientArr),"mdnayab22@gmail.com","Testing","HELLLO");
+            mailNotification.sendMail(mailModel);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        MailModel mailModel = new MailModel(recipientArr, "mdnayab22@gmailcom", "Test", "Hello");
-//        mailNotification.sendMail(mailModel);
         return new ResponseEntity<Object>("Mail Sent Successfully", HttpStatus.OK);
     }
 
